@@ -1008,7 +1008,8 @@ public class DUUIComposer {
                             desc,
                             _storage,
                             name,
-                            pipelineUUIDs
+                            pipelineUUIDs,
+                            this
                     ));
                     thread.start();
                     threads.add(thread);

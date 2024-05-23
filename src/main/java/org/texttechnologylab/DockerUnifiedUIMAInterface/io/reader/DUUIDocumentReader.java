@@ -12,6 +12,7 @@ import org.texttechnologylab.DockerUnifiedUIMAInterface.document_handler.DUUILoc
 import org.texttechnologylab.DockerUnifiedUIMAInterface.document_handler.IDUUIDocumentHandler;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.io.DUUICollectionReader;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.io.DUUIDocumentDecoder;
+import org.texttechnologylab.DockerUnifiedUIMAInterface.io.ProgressMeter;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.monitoring.AdvancedProgressMeter;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.monitoring.DUUIEvent;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.monitoring.DUUIStatus;

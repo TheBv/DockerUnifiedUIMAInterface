@@ -1,7 +1,6 @@
 package org.texttechnologylab.DockerUnifiedUIMAInterface;
 
-import de.tudarmstadt.ukp.dkpro.core.api.metadata.type.DocumentMetaData;
-import de.tudarmstadt.ukp.dkpro.core.api.metadata.type.DocumentMetaData_Type;
+import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.connection.mongodb.MongoDBConfig;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.driver.DUUIRemoteDriver;
@@ -26,8 +25,8 @@ public class TestSegmentationReader {
 
     @Test
     public void testAll() throws Exception {
-        List<Integer> delimiterRange = List.of(5000, 200, 500, 1000, 10_000, 20_000, 50_000);
-        for (int delimiter : delimiterRange) {
+        List<Integer> delimiterRange = List.of(200, 500, 1000, 2000, 5000, 10_000, 20_000);
+        for (int delimiter : Lists.reverse(delimiterRange)) {
             testBase("gerparcor_sample1000_RANDOM_100", delimiter, Tasks.SENTIMENT);
             System.gc();
         }

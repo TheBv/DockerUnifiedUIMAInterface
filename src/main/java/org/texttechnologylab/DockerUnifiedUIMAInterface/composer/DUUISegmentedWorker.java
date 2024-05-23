@@ -22,8 +22,9 @@ public class DUUISegmentedWorker implements Runnable {
     private final String name;
     private final List<String> pipelineUUIDs;
     private final int pipelinePosition;
+    private final DUUIComposer composer;
 
-    public DUUISegmentedWorker(int threadIndex, AtomicBoolean shutdown, DUUIComposer.PipelinePart pipelinePart, DUUICollectionDBReader collectionReader, TypeSystemDescription typesystem, IDUUIStorageBackend backend, String name, List<String> pipelineUUIDs) {
+    public DUUISegmentedWorker(int threadIndex, AtomicBoolean shutdown, DUUIComposer.PipelinePart pipelinePart, DUUICollectionDBReader collectionReader, TypeSystemDescription typesystem, IDUUIStorageBackend backend, String name, List<String> pipelineUUIDs, DUUIComposer composer) {
         this.threadIndex = threadIndex;
         this.shutdown = shutdown;
         this.pipelinePart = pipelinePart;
@@ -33,6 +34,7 @@ public class DUUISegmentedWorker implements Runnable {
         this.name = name;
         this.pipelineUUIDs = pipelineUUIDs;
         this.pipelinePosition = pipelineUUIDs.indexOf(pipelinePart.getUUID());
+        this.composer = composer;
     }
 
     @Override
@@ -73,7 +75,7 @@ public class DUUISegmentedWorker implements Runnable {
             try {
                 DUUIPipelineDocumentPerformance perf = new DUUIPipelineDocumentPerformance(name, waitTimeEnd - waitTimeStart, jCas, trackErrorDocs);
 
-                pipelinePart.getDriver().run(pipelinePart.getUUID(), jCas, perf);
+                pipelinePart.getDriver().run(pipelinePart.getUUID(), jCas, perf, composer);
 
                 if (backend != null) {
                     backend.addMetricsForDocument(perf);
