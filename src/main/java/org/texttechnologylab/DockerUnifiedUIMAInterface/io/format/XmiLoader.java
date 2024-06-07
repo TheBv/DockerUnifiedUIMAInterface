@@ -19,7 +19,7 @@ public class XmiLoader implements IDUUIFormat {
     public void load(InputStream stream, JCas jCas) throws UIMAException {
         try {
             XmiCasDeserializer.deserialize(stream, jCas.getCas(), lenient);
-        } catch (SAXException | IOException e) {
+        } catch (SAXException | IOException e ) {
             throw new RuntimeException(e);
         }
     }

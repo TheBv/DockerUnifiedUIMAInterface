@@ -193,7 +193,7 @@ public class DUUISegmentationReader implements DUUICollectionDBReader {
 
                 // TODO different compressions using io/transport/format
                 try (GZIPOutputStream gzip = new GZIPOutputStream(upload)) {
-                    XmiCasSerializer.serialize(jCas.getCas(), gzip);
+                    XmiCasSerializer.serialize(jCas.getCas(), null, gzip, false, null, null, true);
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -264,7 +264,7 @@ public class DUUISegmentationReader implements DUUICollectionDBReader {
                         throw new RuntimeException(e);
                     }
                     try (GZIPOutputStream stream = new GZIPOutputStream(Files.newOutputStream(path))) {
-                        XmiCasSerializer.serialize(jCas.getCas(), stream);
+                        XmiCasSerializer.serialize(jCas.getCas(), null, stream, false, null, null, true);
                     } catch (SAXException | IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -435,7 +435,7 @@ public class DUUISegmentationReader implements DUUICollectionDBReader {
 
         try (GridFSUploadStream upload = this.mongoBucket.openUploadStream(segmentId, options)) {
             try (GZIPOutputStream gzip = new GZIPOutputStream(upload)) {
-                XmiCasSerializer.serialize(pCas.getCas(), gzip);
+                XmiCasSerializer.serialize(pCas.getCas(), null, gzip, false, null, null, true);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

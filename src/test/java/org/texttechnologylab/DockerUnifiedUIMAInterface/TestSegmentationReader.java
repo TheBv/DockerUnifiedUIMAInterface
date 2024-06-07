@@ -10,6 +10,7 @@ import org.texttechnologylab.DockerUnifiedUIMAInterface.lua.DUUILuaContext;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.pipeline_storage.sqlite.DUUISqliteStorageBackend;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.segmentation.DUUISegmentationStrategy;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.segmentation.DUUISegmentationStrategyByDelemiter;
+import org.texttechnologylab.DockerUnifiedUIMAInterface.segmentation.DUUISegmentationStrategyBySentence;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,9 +26,9 @@ public class TestSegmentationReader {
 
     @Test
     public void testAll() throws Exception {
-        List<Integer> delimiterRange = List.of(200, 500, 1000, 2000, 5000, 10_000, 20_000);
+        List<Integer> delimiterRange = List.of(20, 50, 100, 200, 500, 1000, 2000, 5000, 10_000);
         for (int delimiter : Lists.reverse(delimiterRange)) {
-            testBase("gerparcor_sample1000_RANDOM_100", delimiter, Tasks.SENTIMENT);
+            testBase("gerparcor_berlin", delimiter, Tasks.FLAIR);
             System.gc();
         }
     }
@@ -56,9 +57,9 @@ public class TestSegmentationReader {
 
         MongoDBConfig mongoConfig = new MongoDBConfig("segmentation_mongo.properties");
 
-        DUUISegmentationStrategy segmentationStrategy = new DUUISegmentationStrategyByDelemiter()
-                .withLength(delimeterSize)
-                .withDelemiter(".");
+        DUUISegmentationStrategy segmentationStrategy = new DUUISegmentationStrategyBySentence()
+            .withMaxAnnotationsPerSegment(delimeterSize)
+            .withMaxCharsPerSegment(1000000);
 
         DUUISegmentationReader reader = new DUUISegmentationReader(
                 Paths.get("/opt/sample/" + corpus),
@@ -78,7 +79,7 @@ public class TestSegmentationReader {
             case FLAIR:
                 composer.add(
                         new DUUIRemoteDriver
-                                .Component("http://isengart.hucompute.org:8100")
+                                .Component("http://geltlin.hucompute.org:8100")
                                 .withScale(toolWorkers)
                 );
                 break;
@@ -89,7 +90,7 @@ public class TestSegmentationReader {
                                 .withScale(toolWorkers)
                                 .withParameter("model_name", "cardiffnlp/twitter-roberta-base-sentiment")
                                 .withParameter("selection", "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence")
-                                .withConstraintHost("isengart")
+                                .withConstraintHost("huaxal")
                 );
                 break;
         }
