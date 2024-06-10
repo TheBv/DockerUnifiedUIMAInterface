@@ -16,9 +16,11 @@ import org.texttechnologylab.DockerUnifiedUIMAInterface.connection.DUUIWebsocket
 import org.texttechnologylab.DockerUnifiedUIMAInterface.connection.IDUUIConnectionHandler;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.lua.DUUILuaContext;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.pipeline_storage.DUUIPipelineDocumentPerformance;
+import org.texttechnologylab.DockerUnifiedUIMAInterface.segmentation.DUUISegmentationStrategy;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.security.InvalidParameterException;
@@ -327,7 +329,7 @@ public class DUUISwarmDriver implements IDUUIDriverInterface {
 
             if (_websocket) {
                 swarmDriver._wsclient = new DUUIWebsocketAlt(
-                    getServiceUrl().replaceFirst("http", "ws") + DUUIComposer.V1_COMPONENT_ENDPOINT_PROCESS_WEBSOCKET, _ws_elements);
+                        getServiceUrl().replaceFirst("http", "ws") + DUUIComposer.V1_COMPONENT_ENDPOINT_PROCESS_WEBSOCKET, _ws_elements);
             } else {
                 swarmDriver._wsclient = null;
             }
@@ -447,6 +449,16 @@ public class DUUISwarmDriver implements IDUUIDriverInterface {
 
         public Component withWebsocket(boolean b, int elements) {
             component.withWebsocket(b, elements);
+            return this;
+        }
+
+        public Component withSegmentationStrategy(DUUISegmentationStrategy strategy) {
+            component.withSegmentationStrategy(strategy);
+            return this;
+        }
+
+        public <T extends DUUISegmentationStrategy> Component withSegmentationStrategy(Class<T> strategyClass) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+            component.withSegmentationStrategy(strategyClass.getDeclaredConstructor().newInstance());
             return this;
         }
 

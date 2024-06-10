@@ -1018,6 +1018,14 @@ public class DUUIComposer {
             }
 
             Instant starttime = Instant.now();
+            while (!collectionReader.finishedLoading()){
+                System.out.println(collectionReader.getProgress());
+                Thread.sleep(500L);
+            }
+            if(_storage != null) {
+                _storage.finalizeSegment(name, starttime, Instant.now());
+            }
+
             while(!collectionReader.finishedLoading() || collectionReader.getDone() < collectionReader.getSize()) {
                 System.out.println(collectionReader.getProgress());
                 Thread.sleep(500L);
@@ -1032,7 +1040,12 @@ public class DUUIComposer {
             }
 
             System.out.println("[Composer] Merging documents...");
+
+            Instant mergeStartTime = Instant.now();
             collectionReader.merge();
+            if(_storage != null) {
+                _storage.finalizeMerge(name, mergeStartTime, Instant.now());
+            }
 
             if(_storage != null) {
                 _storage.finalizeRun(name, starttime, Instant.now());

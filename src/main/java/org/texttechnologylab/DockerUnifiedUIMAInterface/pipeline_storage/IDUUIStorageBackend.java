@@ -13,6 +13,12 @@ public interface IDUUIStorageBackend {
     public void addNewRun(String name, DUUIComposer composer) throws SQLException;
     public IDUUIPipelineComponent loadComponent(String id);
     public void addMetricsForDocument(DUUIPipelineDocumentPerformance perf);
+    default void finalizeSegment(String name, Instant start, Instant end) throws SQLException {
+
+    }
+    default void finalizeMerge(String name, Instant start, Instant end) throws SQLException {
+
+    }
     public void finalizeRun(String name, Instant start, Instant end) throws SQLException;
     public void shutdown() throws UnknownHostException;
 

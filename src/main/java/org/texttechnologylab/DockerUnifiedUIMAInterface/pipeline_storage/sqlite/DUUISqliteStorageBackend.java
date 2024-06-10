@@ -57,6 +57,8 @@ public class DUUISqliteStorageBackend implements IDUUIStorageBackend {
         Statement stmt = conn.createStatement();
         stmt.execute("CREATE TABLE IF NOT EXISTS pipeline(name TEXT PRIMARY KEY, workers INT)");
         stmt.execute("CREATE TABLE IF NOT EXISTS pipeline_perf(name TEXT, startTime INT, endTime INT)");
+        stmt.execute("CREATE TABLE IF NOT EXISTS pipeline_segment_perf(name TEXT, startTime INT, endTime INT)");
+        stmt.execute("CREATE TABLE IF NOT EXISTS pipeline_merge_perf(name TEXT, startTime INT, endTime INT)");
         stmt.execute("CREATE TABLE IF NOT EXISTS pipeline_component(hash INT, name TEXT, description TEXT)");
         stmt.execute("CREATE TABLE IF NOT EXISTS pipeline_document(documentSize INT, waitTime INT, totalTime INT, document TEXT)");
         stmt.execute("CREATE TABLE IF NOT EXISTS pipeline_document_perf(pipelinename TEXT, componenthash INT, durationSerialize INT,\n" +
@@ -98,6 +100,15 @@ public class DUUISqliteStorageBackend implements IDUUIStorageBackend {
         dStmt.setString(1, name);
         dStmt.execute();
         //dStmt.executeUpdate();
+
+        dStmt = conn.prepareStatement("DELETE FROM pipeline_segment_perf WHERE name = ?");
+        dStmt.setString(1, name);
+        dStmt.execute();
+
+        dStmt = conn.prepareStatement("DELETE FROM pipeline_merge_perf WHERE name = ?");
+        dStmt.setString(1, name);
+        dStmt.execute();
+
 
         PreparedStatement cleanUp = conn.prepareStatement("DELETE FROM pipeline_document_perf where pipelinename = ?;");
         cleanUp.setString(1, name);
@@ -169,6 +180,34 @@ public class DUUISqliteStorageBackend implements IDUUIStorageBackend {
                 e.printStackTrace();
             }
         }
+        _client.add(conn);
+    }
+
+    @Override
+    public void finalizeSegment(String name, Instant start, Instant end) throws SQLException {
+        Connection conn = null;
+        while(conn == null) {
+            conn = _client.poll();
+        }
+        PreparedStatement stmt2 = conn.prepareStatement("INSERT INTO pipeline_segment_perf(name,startTime,endTime) VALUES (?,?,?)");
+        stmt2.setString(1,name);
+        stmt2.setLong(2,start.toEpochMilli());
+        stmt2.setLong(3,end.toEpochMilli());
+        stmt2.executeUpdate();
+        _client.add(conn);
+    }
+
+    @Override
+    public void finalizeMerge(String name, Instant start, Instant end) throws SQLException {
+        Connection conn = null;
+        while(conn == null) {
+            conn = _client.poll();
+        }
+        PreparedStatement stmt2 = conn.prepareStatement("INSERT INTO pipeline_merge_perf(name,startTime,endTime) VALUES (?,?,?)");
+        stmt2.setString(1,name);
+        stmt2.setLong(2,start.toEpochMilli());
+        stmt2.setLong(3,end.toEpochMilli());
+        stmt2.executeUpdate();
         _client.add(conn);
     }
 

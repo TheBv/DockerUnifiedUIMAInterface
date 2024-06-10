@@ -536,9 +536,9 @@
 
 
         <dependency>
-            <groupId>com.github.texttechnologylab</groupId>
+            <groupId>com.github.Myyyvothrr</groupId>
             <artifactId>UIMATypeSystem</artifactId>
-            <version>${typesystem.version}</version>
+            <version>996e2c0b02</version>
         </dependency>
 
         <dependency>
