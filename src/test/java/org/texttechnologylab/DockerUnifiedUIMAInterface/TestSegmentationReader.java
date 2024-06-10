@@ -46,9 +46,9 @@ public class TestSegmentationReader {
         System.gc();
         testSegmented(corpus, 1000, TASK.SEGMENTED_RAW, MODEL.SENTIMENT);
         System.gc();
-        testSegmented(corpus, 1000, TASK.SEGMENTED_STRUCT, MODEL.SENTIMENT);
+        testSegmented(corpus, 30, TASK.SEGMENTED_STRUCT, MODEL.SENTIMENT);
         System.gc();
-        testSegmentedMongo(corpus, 1000, TASK.SEGMENTED_STRUCT_MONGO, MODEL.SENTIMENT);
+        testSegmentedMongo(corpus, 30, TASK.SEGMENTED_STRUCT_MONGO, MODEL.SENTIMENT);
 
     }
 
@@ -156,7 +156,7 @@ public class TestSegmentationReader {
         addModel(composer, toolWorkers, model, segmentationStrategy);
 
         DUUIUIMADriver.Component writer = new DUUIUIMADriver.Component(createEngineDescription(XmiWriter.class
-                , XmiWriter.PARAM_TARGET_LOCATION, out
+                , XmiWriter.PARAM_TARGET_LOCATION, out.toString()
                 , XmiWriter.PARAM_PRETTY_PRINT, true
                 , XmiWriter.PARAM_OVERWRITE, false
                 , XmiWriter.PARAM_VERSION, "1.1"
